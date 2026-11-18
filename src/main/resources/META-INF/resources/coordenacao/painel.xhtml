@@ -1,0 +1,505 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template.xhtml">
+
+    <ui:define name="conteudo">
+
+        <style>
+            .coord-dashboard {
+                font-family: 'Segoe UI', Arial, sans-serif;
+                color: #203653;
+                padding: 8px 0 30px;
+            }
+
+            .coord-hero {
+                position: relative;
+                overflow: hidden;
+                background: linear-gradient(120deg, #092e65, #0875d1);
+                border-radius: 22px;
+                padding: 35px;
+                color: white;
+                margin-bottom: 24px;
+                box-shadow: 0 12px 30px rgba(9,65,132,.14);
+            }
+
+            .coord-hero::after {
+                content: "";
+                position: absolute;
+                width: 260px;
+                height: 260px;
+                border: 45px solid rgba(255,255,255,.06);
+                border-radius: 50%;
+                right: -120px;
+                top: -110px;
+            }
+
+            .coord-eyebrow {
+                position: relative;
+                z-index: 1;
+                color: #b9dcff;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 1.5px;
+            }
+
+            .coord-hero h1 {
+                position: relative;
+                z-index: 1;
+                font-size: 30px;
+                color: white;
+                margin: 10px 0;
+            }
+
+            .coord-hero p {
+                position: relative;
+                z-index: 1;
+                color: #dbeeff;
+                font-size: 14px;
+                line-height: 1.7;
+                max-width: 700px;
+                margin: 0;
+            }
+
+            .coord-cards {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 18px;
+                margin-bottom: 25px;
+            }
+
+            .coord-card {
+                background: white;
+                border: 1px solid #e5ebf4;
+                border-radius: 17px;
+                padding: 23px;
+                box-shadow: 0 5px 20px rgba(20,55,100,.04);
+                transition: .2s;
+            }
+
+            .coord-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 28px rgba(20,55,100,.09);
+            }
+
+            .coord-card-icon {
+                width: 46px;
+                height: 46px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #eaf3ff;
+                color: #0873d5;
+                border-radius: 13px;
+                font-size: 21px;
+                margin-bottom: 16px;
+            }
+
+            .coord-card-value {
+                color: #143b70;
+                font-size: 27px;
+                font-weight: 800;
+            }
+
+            .coord-card-label {
+                color: #7d8ca0;
+                font-size: 12px;
+                margin-top: 6px;
+            }
+
+            .coord-panel {
+                background: white;
+                border: 1px solid #e5ebf4;
+                border-radius: 18px;
+                padding: 25px;
+                box-shadow: 0 5px 20px rgba(20,55,100,.04);
+                margin-bottom: 24px;
+            }
+
+            .coord-panel-heading {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+
+            .coord-panel-heading i {
+                color: #0873d5;
+                font-size: 22px;
+            }
+
+            .coord-panel-heading h2 {
+                color: #173b69;
+                font-size: 20px;
+                margin: 0;
+            }
+
+            .coord-description {
+                color: #8290a4;
+                font-size: 13px;
+                line-height: 1.7;
+                margin-bottom: 25px;
+            }
+
+            .coord-form-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 20px;
+            }
+
+            .coord-field-label {
+                display: block;
+                color: #304967;
+                font-weight: 700;
+                font-size: 13px;
+                margin-bottom: 10px;
+            }
+
+            .coord-field-label i {
+                color: #0873d5;
+                margin-right: 6px;
+            }
+
+            .coord-field .ui-inputfield,
+            .coord-field .ui-selectonemenu,
+            .coord-field .ui-inputnumber,
+            .coord-field .ui-inputnumber-input {
+                width: 100%;
+            }
+
+            .coord-field .ui-inputfield {
+                border-radius: 10px !important;
+                padding: 13px !important;
+                border-color: #dce5f0 !important;
+            }
+
+            .coord-actions {
+                margin-top: 25px;
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            .coord-save.ui-button {
+                background: linear-gradient(90deg, #0758b9, #0984e7) !important;
+                border: none !important;
+                border-radius: 10px !important;
+                padding: 13px 22px !important;
+                font-weight: 700 !important;
+            }
+
+            .coord-table thead th {
+                background: #f0f5fc !important;
+                color: #38516f !important;
+                padding: 15px !important;
+                border: none !important;
+                font-size: 12px;
+            }
+
+            .coord-table tbody td {
+                padding: 15px !important;
+                border-color: #edf1f6 !important;
+                font-size: 13px;
+            }
+
+            .coord-table tbody tr:hover {
+                background: #f7faff !important;
+            }
+
+            .coord-room {
+                font-weight: 700;
+                color: #153f75;
+            }
+
+            .coord-capacity {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                color: #2461a1;
+                font-weight: 600;
+            }
+
+            .coord-tip {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                background: #edf6ff;
+                border: 1px solid #dcecff;
+                color: #426080;
+                padding: 17px;
+                border-radius: 12px;
+                margin-top: 20px;
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .coord-tip i {
+                color: #0873d5;
+                font-size: 20px;
+            }
+
+            @media (max-width: 850px) {
+                .coord-cards {
+                    grid-template-columns: 1fr;
+                }
+
+                .coord-form-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            @media (max-width: 600px) {
+                .coord-hero {
+                    padding: 25px;
+                }
+
+                .coord-hero h1 {
+                    font-size: 24px;
+                }
+
+                .coord-panel {
+                    padding: 17px;
+                }
+
+                .coord-actions {
+                    justify-content: stretch;
+                }
+
+                .coord-save.ui-button {
+                    width: 100%;
+                }
+            }
+        </style>
+
+        <main class="coord-dashboard">
+
+            <section class="coord-hero">
+
+                <div class="coord-eyebrow">
+                    PORTAL ACADÊMICO / COORDENAÇÃO
+                </div>
+
+                <h1>
+                    Gestão Acadêmica 👨‍💼
+                </h1>
+
+                <p>
+                    Gerencie os ambientes acadêmicos,
+                    cadastre salas e laboratórios e acompanhe
+                    as informações de infraestrutura disponíveis
+                    para as atividades da instituição.
+                </p>
+
+            </section>
+
+            <section class="coord-cards">
+
+                <div class="coord-card">
+                    <div class="coord-card-icon">
+                        <i class="pi pi-building"></i>
+                    </div>
+
+                    <div class="coord-card-value">
+                        #{coordenacaoBean.salas.size()}
+                    </div>
+
+                    <div class="coord-card-label">
+                        Ambientes cadastrados
+                    </div>
+                </div>
+
+                <div class="coord-card">
+                    <div class="coord-card-icon">
+                        <i class="pi pi-map-marker"></i>
+                    </div>
+
+                    <div class="coord-card-value">
+                        Salas
+                    </div>
+
+                    <div class="coord-card-label">
+                        Gestão de espaços acadêmicos
+                    </div>
+                </div>
+
+                <div class="coord-card">
+                    <div class="coord-card-icon">
+                        <i class="pi pi-desktop"></i>
+                    </div>
+
+                    <div class="coord-card-value">
+                        Laboratórios
+                    </div>
+
+                    <div class="coord-card-label">
+                        Ambientes para aulas práticas
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="coord-panel">
+
+                <div class="coord-panel-heading">
+                    <i class="pi pi-plus-circle"></i>
+                    <h2>Cadastrar novo ambiente</h2>
+                </div>
+
+                <p class="coord-description">
+                    Preencha os campos abaixo para adicionar
+                    uma nova sala ou laboratório ao sistema.
+                </p>
+
+                <h:form id="formCadastro">
+
+                    <p:messages id="msgs"
+                                showDetail="true"
+                                closable="true"/>
+
+                    <div class="coord-form-grid">
+
+                        <div class="coord-field">
+
+                            <p:outputLabel for="bloco"
+                                           styleClass="coord-field-label"
+                                           value="Bloco"/>
+
+                            <p:inputText id="bloco"
+                                         value="#{coordenacaoBean.novaSala.bloco}"
+                                         required="true"
+                                         requiredMessage="Informe o bloco."
+                                         placeholder="Ex: Bloco C"/>
+
+                        </div>
+
+                        <div class="coord-field">
+
+                            <p:outputLabel for="numero"
+                                           styleClass="coord-field-label"
+                                           value="Número / Nome"/>
+
+                            <p:inputText id="numero"
+                                         value="#{coordenacaoBean.novaSala.numero}"
+                                         required="true"
+                                         requiredMessage="Informe o número ou nome."
+                                         placeholder="Ex: Sala 204 ou Lab 05"/>
+
+                        </div>
+
+                        <div class="coord-field">
+
+                            <p:outputLabel for="tipo"
+                                           styleClass="coord-field-label"
+                                           value="Tipo de Ambiente"/>
+
+                            <p:selectOneMenu id="tipo"
+                                             value="#{coordenacaoBean.novaSala.tipo}"
+                                             style="width: 100%;">
+
+                                <f:selectItem itemLabel="Sala Teórica"
+                                              itemValue="TEORICA"/>
+
+                                <f:selectItem itemLabel="Laboratório Prático"
+                                              itemValue="LABORATORIO"/>
+
+                            </p:selectOneMenu>
+
+                        </div>
+
+                        <div class="coord-field">
+
+                            <p:outputLabel for="capacidade"
+                                           styleClass="coord-field-label"
+                                           value="Capacidade de Alunos"/>
+
+                            <p:inputNumber id="capacidade"
+                                           value="#{coordenacaoBean.novaSala.capacidade}"
+                                           required="true"
+                                           requiredMessage="Informe a capacidade."
+                                           minValue="1"
+                                           decimalPlaces="0"/>
+
+                        </div>
+
+                    </div>
+
+                    <div class="coord-actions">
+
+                        <p:commandButton value="Salvar Ambiente"
+                                         action="#{coordenacaoBean.cadastrarSala}"
+                                         process="@form"
+                                         update="@form :tabelaSalas"
+                                         icon="pi pi-save"
+                                         styleClass="coord-save"/>
+
+                    </div>
+
+                </h:form>
+
+            </section>
+
+            <section class="coord-panel">
+
+                <div class="coord-panel-heading">
+                    <i class="pi pi-list"></i>
+                    <h2>Ambientes cadastrados</h2>
+                </div>
+
+                <p class="coord-description">
+                    Consulte as salas e os laboratórios
+                    registrados no sistema acadêmico.
+                </p>
+
+                <h:form id="tabelaSalas">
+
+                    <p:dataTable value="#{coordenacaoBean.salas}"
+                                 var="s"
+                                 styleClass="coord-table"
+                                 emptyMessage="Nenhum ambiente cadastrado."
+                                 stripedRows="true"
+                                 paginator="true"
+                                 rows="8"
+                                 paginatorPosition="bottom"
+                                 reflow="true">
+
+                        <p:column headerText="Bloco">
+                            <h:outputText value="#{s.bloco}"/>
+                        </p:column>
+
+                        <p:column headerText="Número / Nome">
+                            <h:outputText value="#{s.numero}"
+                                          styleClass="coord-room"/>
+                        </p:column>
+
+                        <p:column headerText="Tipo">
+                            <p:tag value="#{s.tipo}"
+                                   severity="#{s.tipo eq 'LABORATORIO' ? 'warn' : 'info'}"/>
+                        </p:column>
+
+                        <p:column headerText="Capacidade">
+                            <span class="coord-capacity">
+                                <i class="pi pi-users"></i>
+                                <h:outputText value="#{s.capacidade} alunos"/>
+                            </span>
+                        </p:column>
+
+                    </p:dataTable>
+
+                </h:form>
+
+                <div class="coord-tip">
+                    <i class="pi pi-info-circle"></i>
+                    Os ambientes cadastrados ficam disponíveis
+                    para consulta e utilização nos módulos
+                    acadêmicos do SLA.
+                </div>
+
+            </section>
+
+        </main>
+
+    </ui:define>
+
+</ui:composition>

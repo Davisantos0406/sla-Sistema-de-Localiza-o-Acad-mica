@@ -1,32 +1,557 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
 
-<h:head>
-    <title>Painel do Professor - SLA</title>
-</h:head>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template.xhtml">
 
-<h:body style="padding: 20px; background-color: #f4f7f6;">
-    <h:form>
-        <h1>Painel do Professor: #{loginBean.usuarioLogado.nome}</h1>
-        
-        <p:panel header="Minhas Turmas Alocadas" style="margin-top: 20px;">
-            <p:dataTable value="#{loginBean.alocacoes}" var="a">
-                <p:column headerText="Disciplina">
-                    <h:outputText value="#{a.DISCIPLINA}" />
-                </p:column>
-                <p:column headerText="Bloco / Sala">
-                    <h:outputText value="#{a.BLOCO} - Sala #{a.NUMERO}" />
-                </p:column>
-                <p:column headerText="Horário">
-                    <h:outputText value="#{a.HORARIO}" />
-                </p:column>
-            </p:dataTable>
-        </p:panel>
-        
-        <p:commandButton value="Sair" action="/login.xhtml?faces-redirect=true" style="margin-top: 20px;" />
-    </h:form>
-</h:body>
-</html>
+    <ui:define name="conteudo">
+
+        <style>
+            .prof-dashboard {
+                font-family: 'Segoe UI', Arial, sans-serif;
+                color: #203653;
+                padding: 8px 0 30px;
+            }
+
+            .prof-hero {
+                position: relative;
+                overflow: hidden;
+                background: linear-gradient(120deg, #092e65, #0875d1);
+                border-radius: 22px;
+                padding: 35px;
+                color: white;
+                margin-bottom: 24px;
+                box-shadow: 0 12px 30px rgba(9,65,132,.14);
+            }
+
+            .prof-hero::after {
+                content: "";
+                position: absolute;
+                width: 260px;
+                height: 260px;
+                border: 45px solid rgba(255,255,255,.06);
+                border-radius: 50%;
+                right: -120px;
+                top: -110px;
+            }
+
+            .prof-eyebrow {
+                position: relative;
+                z-index: 1;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 1.5px;
+                color: #b9dcff;
+            }
+
+            .prof-hero h1 {
+                position: relative;
+                z-index: 1;
+                font-size: 30px;
+                color: white;
+                margin: 10px 0;
+            }
+
+            .prof-hero p {
+                position: relative;
+                z-index: 1;
+                color: #dbeeff;
+                font-size: 14px;
+                line-height: 1.7;
+                max-width: 650px;
+                margin: 0;
+            }
+
+            .prof-cards {
+                display: grid;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                gap: 17px;
+                margin-bottom: 25px;
+            }
+
+            .prof-card {
+                background: #fff;
+                border: 1px solid #e5ebf4;
+                border-radius: 17px;
+                padding: 22px;
+                box-shadow: 0 5px 20px rgba(20,55,100,.04);
+                transition: transform .2s, box-shadow .2s;
+            }
+
+            .prof-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 28px rgba(20,55,100,.09);
+            }
+
+            .prof-card-icon {
+                width: 46px;
+                height: 46px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #eaf3ff;
+                color: #0873d5;
+                border-radius: 13px;
+                font-size: 21px;
+                margin-bottom: 16px;
+            }
+
+            .prof-card-value {
+                color: #143b70;
+                font-size: 25px;
+                font-weight: 800;
+                line-height: 1.3;
+            }
+
+            .prof-card-label {
+                color: #7d8ca0;
+                font-size: 12px;
+                margin-top: 6px;
+            }
+
+            .prof-grid {
+                display: grid;
+                grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+                gap: 20px;
+                margin-bottom: 24px;
+            }
+
+            .prof-panel {
+                background: #fff;
+                border: 1px solid #e5ebf4;
+                border-radius: 18px;
+                padding: 24px;
+                box-shadow: 0 5px 20px rgba(20,55,100,.04);
+                min-width: 0;
+            }
+
+            .prof-panel-heading {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                margin-bottom: 20px;
+            }
+
+            .prof-panel-heading i {
+                color: #0873d5;
+                font-size: 21px;
+            }
+
+            .prof-panel-heading h2 {
+                color: #173b69;
+                font-size: 19px;
+                margin: 0;
+            }
+
+            .prof-panel-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+                margin-bottom: 20px;
+            }
+
+            .prof-add-button {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 10px 16px;
+                border-radius: 10px;
+                background: linear-gradient(120deg, #0a78d5, #0d5db6);
+                color: white !important;
+                text-decoration: none !important;
+                font-size: 12px;
+                font-weight: 700;
+                box-shadow: 0 7px 20px rgba(10, 120, 213, .18);
+            }
+
+            .prof-add-button:hover {
+                color: white !important;
+                filter: brightness(1.05);
+            }
+
+            .prof-description {
+                font-size: 13px;
+                color: #8290a4;
+                line-height: 1.6;
+                margin-bottom: 20px;
+            }
+
+            .prof-info-row {
+                display: flex;
+                align-items: flex-start;
+                gap: 13px;
+                padding: 15px 0;
+                border-bottom: 1px solid #edf1f6;
+            }
+
+            .prof-info-row:last-child {
+                border-bottom: none;
+            }
+
+            .prof-info-icon {
+                width: 38px;
+                height: 38px;
+                border-radius: 10px;
+                background: #edf5ff;
+                color: #0873d5;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+            .prof-info-title {
+                font-size: 13px;
+                font-weight: 700;
+                color: #294567;
+            }
+
+            .prof-info-text {
+                font-size: 12px;
+                color: #8190a3;
+                line-height: 1.6;
+                margin-top: 4px;
+            }
+
+            .prof-table-wrap {
+                overflow-x: auto;
+            }
+
+            .prof-table thead th {
+                background: #f0f5fc !important;
+                color: #38516f !important;
+                padding: 15px !important;
+                border: none !important;
+                font-size: 12px;
+            }
+
+            .prof-table tbody td {
+                padding: 16px 15px !important;
+                border-color: #edf1f6 !important;
+                font-size: 13px;
+            }
+
+            .prof-table tbody tr:hover {
+                background: #f7faff !important;
+            }
+
+            .prof-disciplina {
+                font-weight: 700;
+                color: #153f75;
+            }
+
+            .prof-local {
+                color: #2461a1;
+                font-weight: 600;
+            }
+
+            .prof-local i {
+                margin-right: 6px;
+            }
+
+            .prof-tip {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                background: #edf6ff;
+                border: 1px solid #dcecff;
+                color: #426080;
+                padding: 17px;
+                border-radius: 12px;
+                margin-top: 20px;
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .prof-tip i {
+                color: #0873d5;
+                font-size: 20px;
+            }
+
+            @media (max-width: 1050px) {
+                .prof-cards {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+
+                .prof-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            @media (max-width: 600px) {
+                .prof-cards {
+                    grid-template-columns: 1fr;
+                }
+
+                .prof-hero {
+                    padding: 25px;
+                }
+
+                .prof-hero h1 {
+                    font-size: 24px;
+                }
+
+                .prof-panel {
+                    padding: 17px;
+                }
+            }
+        </style>
+
+        <main class="prof-dashboard">
+
+            <section class="prof-hero">
+
+                <div class="prof-eyebrow">
+                    PORTAL ACADÊMICO / ÁREA DO PROFESSOR
+                </div>
+
+                <h1>
+                    Olá, #{loginBean.usuarioLogado.nome}! 👨‍🏫
+                </h1>
+
+                <p>
+                    Bem-vindo ao seu espaço docente.
+                    Consulte suas disciplinas, acompanhe seus horários
+                    e localize as salas das suas aulas.
+                </p>
+
+            </section>
+
+            <section class="prof-cards">
+
+                <div class="prof-card">
+                    <div class="prof-card-icon">
+                        <i class="pi pi-book"></i>
+                    </div>
+                    <div class="prof-card-value">
+                        #{loginBean.alocacoes.size()}
+                    </div>
+                    <div class="prof-card-label">
+                        Aulas cadastradas
+                    </div>
+                </div>
+
+                <div class="prof-card">
+                    <div class="prof-card-icon">
+                        <i class="pi pi-calendar"></i>
+                    </div>
+                    <div class="prof-card-value">
+                        Minha grade
+                    </div>
+                    <div class="prof-card-label">
+                        Horários de aulas
+                    </div>
+                </div>
+
+                <div class="prof-card">
+                    <div class="prof-card-icon">
+                        <i class="pi pi-map-marker"></i>
+                    </div>
+                    <div class="prof-card-value">
+                        Campus
+                    </div>
+                    <div class="prof-card-label">
+                        Salas e laboratórios
+                    </div>
+                </div>
+
+                <div class="prof-card">
+                    <div class="prof-card-icon">
+                        <i class="pi pi-users"></i>
+                    </div>
+                    <div class="prof-card-value">
+                        Docente
+                    </div>
+                    <div class="prof-card-label">
+                        Perfil acadêmico
+                    </div>
+                </div>
+
+            </section>
+
+            <div class="prof-grid">
+
+                <section class="prof-panel">
+
+                    <div class="prof-panel-heading">
+                        <i class="pi pi-calendar"></i>
+                        <h2>Minha rotina docente</h2>
+                    </div>
+
+                    <p class="prof-description">
+                        Acompanhe sua programação acadêmica e
+                        consulte os ambientes destinados às suas aulas.
+                    </p>
+
+                    <div class="prof-info-row">
+                        <div class="prof-info-icon">
+                            <i class="pi pi-book"></i>
+                        </div>
+                        <div>
+                            <div class="prof-info-title">
+                                Disciplinas
+                            </div>
+                            <div class="prof-info-text">
+                                Visualize as disciplinas vinculadas
+                                às suas alocações acadêmicas.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prof-info-row">
+                        <div class="prof-info-icon">
+                            <i class="pi pi-map-marker"></i>
+                        </div>
+                        <div>
+                            <div class="prof-info-title">
+                                Salas e laboratórios
+                            </div>
+                            <div class="prof-info-text">
+                                Consulte os blocos e ambientes
+                                destinados às atividades docentes.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prof-info-row">
+                        <div class="prof-info-icon">
+                            <i class="pi pi-clock"></i>
+                        </div>
+                        <div>
+                            <div class="prof-info-title">
+                                Horários
+                            </div>
+                            <div class="prof-info-text">
+                                Confira os dias e horários
+                                de suas aulas agendadas.
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <aside class="prof-panel">
+
+                    <div class="prof-panel-heading">
+                        <i class="pi pi-user"></i>
+                        <h2>Meu perfil docente</h2>
+                    </div>
+
+                    <div class="prof-info-row">
+                        <div class="prof-info-icon">
+                            <i class="pi pi-id-card"></i>
+                        </div>
+                        <div>
+                            <div class="prof-info-title">Nome</div>
+                            <div class="prof-info-text">
+                                <h:outputText value="#{loginBean.usuarioLogado.nome}"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prof-info-row">
+                        <div class="prof-info-icon">
+                            <i class="pi pi-envelope"></i>
+                        </div>
+                        <div>
+                            <div class="prof-info-title">
+                                E-mail institucional
+                            </div>
+                            <div class="prof-info-text">
+                                <h:outputText value="#{loginBean.usuarioLogado.email}"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prof-info-row">
+                        <div class="prof-info-icon">
+                            <i class="pi pi-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <div class="prof-info-title">
+                                Tipo de acesso
+                            </div>
+                            <div class="prof-info-text">
+                                Professor
+                            </div>
+                        </div>
+                    </div>
+
+                </aside>
+
+            </div>
+
+            <section class="prof-panel">
+
+                <div class="prof-panel-header">
+                    <div class="prof-panel-heading">
+                        <i class="pi pi-list"></i>
+                        <h2>Minhas aulas agendadas</h2>
+                    </div>
+
+                    <h:outputLink value="/professor/nova-aula.xhtml"
+                                  target="_blank"
+                                  styleClass="prof-add-button">
+                        <i class="pi pi-plus"></i>
+                        Adicionar aula
+                    </h:outputLink>
+                </div>
+
+                <p class="prof-description">
+                    Disciplinas, localização e horários
+                    disponíveis para consulta.
+                </p>
+
+                <div class="prof-table-wrap">
+
+                    <p:dataTable value="#{loginBean.alocacoes}"
+                                 var="a"
+                                 styleClass="prof-table"
+                                 emptyMessage="Nenhuma aula encontrada."
+                                 stripedRows="true"
+                                 reflow="true">
+
+                        <p:column headerText="Disciplina">
+                            <h:outputText value="#{a.DISCIPLINA}"
+                                          styleClass="prof-disciplina"/>
+                        </p:column>
+
+                        <p:column headerText="Localização">
+                            <span class="prof-local">
+                                <i class="pi pi-map-marker"></i>
+                                <h:outputText value="#{a.BLOCO} - #{a.NUMERO}"/>
+                            </span>
+                        </p:column>
+
+                        <p:column headerText="Tipo de Ambiente">
+                            <p:tag value="#{a.TIPO}"
+                                   severity="#{a.TIPO eq 'LABORATORIO' ? 'warn' : 'info'}"/>
+                        </p:column>
+
+                        <p:column headerText="Horário">
+                            <h:outputText value="#{a.DIA_SEMANA}"/>
+                            <br/>
+                            <h:outputText value="#{a.HORARIO_INICIO} - #{a.HORARIO_FIM}"/>
+                        </p:column>
+
+                    </p:dataTable>
+
+                </div>
+
+                <div class="prof-tip">
+                    <i class="pi pi-info-circle"></i>
+                    Os horários e ambientes exibidos
+                    correspondem às alocações registradas
+                    no Sistema de Localização Acadêmica.
+                </div>
+
+            </section>
+
+        </main>
+
+    </ui:define>
+
+</ui:composition>

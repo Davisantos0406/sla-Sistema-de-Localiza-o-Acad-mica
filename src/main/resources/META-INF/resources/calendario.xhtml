@@ -1,0 +1,539 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template.xhtml">
+
+    <ui:define name="conteudo">
+
+        <style>
+            .cal-dashboard {
+                font-family: 'Segoe UI', Arial, sans-serif;
+                color: #203653;
+                padding: 8px 0 30px;
+            }
+
+            .cal-hero {
+                background: linear-gradient(120deg, #092e65, #0875d1);
+                border-radius: 22px;
+                padding: 35px;
+                color: white;
+                margin-bottom: 24px;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .cal-hero::after {
+                content: "";
+                position: absolute;
+                width: 250px;
+                height: 250px;
+                border: 45px solid rgba(255,255,255,.06);
+                border-radius: 50%;
+                right: -110px;
+                top: -110px;
+            }
+
+            .cal-hero h1 {
+                color: white;
+                font-size: 30px;
+                margin: 10px 0;
+                position: relative;
+                z-index: 1;
+            }
+
+            .cal-hero p {
+                color: #dbeeff;
+                font-size: 14px;
+                line-height: 1.7;
+                margin: 0;
+                position: relative;
+                z-index: 1;
+            }
+
+            .cal-menu-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 9px;
+                margin-top: 20px;
+                padding: 10px 15px;
+                border: 1px solid rgba(255,255,255,.55);
+                border-radius: 8px;
+                color: white !important;
+                text-decoration: none !important;
+                font-size: 13px;
+                font-weight: 700;
+                position: relative;
+                z-index: 1;
+                transition: background .2s ease;
+            }
+
+            .cal-menu-link:hover {
+                background: rgba(255,255,255,.14);
+            }
+
+            .cal-eyebrow {
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 1.5px;
+                color: #b9dcff;
+                position: relative;
+                z-index: 1;
+            }
+
+            .cal-cards {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 18px;
+                margin-bottom: 24px;
+            }
+
+            .cal-card {
+                background: white;
+                border: 1px solid #e5ebf4;
+                border-radius: 17px;
+                padding: 23px;
+                box-shadow: 0 5px 20px rgba(20,55,100,.04);
+            }
+
+            .cal-card-icon {
+                width: 45px;
+                height: 45px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 12px;
+                background: #eaf3ff;
+                color: #0873d5;
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+
+            .cal-card-value {
+                font-size: 25px;
+                font-weight: 800;
+                color: #143b70;
+            }
+
+            .cal-card-label {
+                font-size: 12px;
+                color: #7d8ca0;
+                margin-top: 6px;
+            }
+
+            .cal-layout {
+                display: grid;
+                grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
+                gap: 22px;
+            }
+
+            .cal-panel {
+                background: white;
+                border: 1px solid #e5ebf4;
+                border-radius: 18px;
+                padding: 25px;
+                box-shadow: 0 5px 20px rgba(20,55,100,.04);
+                min-width: 0;
+            }
+
+            .cal-panel-title {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                margin-bottom: 20px;
+            }
+
+            .cal-panel-title i {
+                color: #0873d5;
+                font-size: 21px;
+            }
+
+            .cal-panel-title h2 {
+                margin: 0;
+                font-size: 19px;
+                color: #173b69;
+            }
+
+            .cal-month-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                margin-bottom: 22px;
+            }
+
+            .cal-month-name {
+                font-size: 18px;
+                font-weight: 800;
+                color: #173b69;
+                text-transform: capitalize;
+            }
+
+            .cal-month-actions {
+                display: flex;
+                gap: 8px;
+            }
+
+            .cal-nav-button {
+                width: 36px;
+                height: 36px;
+                border: 1px solid #e0e8f2;
+                border-radius: 10px;
+                background: #f7faff;
+                color: #2867a8;
+                cursor: pointer;
+                font-size: 14px;
+            }
+
+            .cal-nav-button:hover {
+                background: #eaf3ff;
+            }
+
+            .cal-weekdays,
+            .cal-days {
+                display: grid;
+                grid-template-columns: repeat(7, minmax(0, 1fr));
+                gap: 7px;
+            }
+
+            .cal-weekdays {
+                margin-bottom: 12px;
+            }
+
+            .cal-weekdays div {
+                text-align: center;
+                color: #7b8ca2;
+                font-size: 12px;
+                font-weight: 700;
+                padding: 8px 0;
+            }
+
+            .cal-day {
+                min-height: 64px;
+                border: 1px solid #edf1f7;
+                border-radius: 11px;
+                padding: 10px;
+                font-size: 13px;
+                color: #405875;
+                background: #fbfdff;
+            }
+
+            .cal-day.today {
+                border-color: #0873d5;
+                background: #edf6ff;
+                font-weight: 800;
+            }
+
+            .cal-day.event {
+                background: #fff2f1;
+                border-color: #ffc6c0;
+                color: #b32b2b;
+                font-weight: 800;
+            }
+
+            .cal-event-dot {
+                display: block;
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: #e34a4a;
+                margin-top: 9px;
+            }
+
+            .cal-event-item {
+                display: flex;
+                align-items: flex-start;
+                gap: 15px;
+                padding: 18px 0;
+                border-bottom: 1px solid #edf1f6;
+            }
+
+            .cal-event-item:last-child {
+                border-bottom: none;
+            }
+
+            .cal-event-date {
+                width: 58px;
+                min-width: 58px;
+                padding: 12px 8px;
+                border-radius: 12px;
+                background: #edf5ff;
+                color: #0869c6;
+                text-align: center;
+            }
+
+            .cal-event-date strong {
+                display: block;
+                font-size: 22px;
+            }
+
+            .cal-event-date span {
+                font-size: 11px;
+                font-weight: 700;
+            }
+
+            .cal-event-info h3 {
+                margin: 0 0 7px;
+                color: #24466f;
+                font-size: 14px;
+            }
+
+            .cal-event-info p {
+                margin: 0 0 10px;
+                color: #8390a2;
+                font-size: 12px;
+                line-height: 1.6;
+            }
+
+            .cal-tip {
+                background: #edf6ff;
+                border: 1px solid #dcecff;
+                border-radius: 12px;
+                padding: 17px;
+                color: #426080;
+                font-size: 12px;
+                line-height: 1.7;
+                margin-top: 20px;
+            }
+
+            @media (max-width: 1000px) {
+                .cal-layout {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            @media (max-width: 750px) {
+                .cal-cards {
+                    grid-template-columns: 1fr;
+                }
+
+                .cal-hero {
+                    padding: 25px;
+                }
+
+                .cal-hero h1 {
+                    font-size: 24px;
+                }
+
+                .cal-panel {
+                    padding: 17px;
+                }
+
+                .cal-day {
+                    min-height: 45px;
+                    padding: 7px;
+                    font-size: 11px;
+                }
+            }
+        </style>
+
+        <main class="cal-dashboard">
+
+            <section class="cal-hero">
+
+                <div class="cal-eyebrow">
+                    PORTAL ACADÊMICO / CALENDÁRIO
+                </div>
+
+                <h1>Calendário Acadêmico</h1>
+
+                <p>
+                    Acompanhe avaliações, eventos e datas
+                    importantes da rotina acadêmica.
+                </p>
+
+                <h:link outcome="#{loginBean.usuarioLogado.perfilNome eq 'PROFESSOR' ? '/professor/painel.xhtml' : (loginBean.usuarioLogado.perfilNome eq 'COORDENADOR' ? '/coordenacao/painel.xhtml' : '/aluno/painel.xhtml')}"
+                        styleClass="cal-menu-link">
+                    <i class="pi pi-arrow-left"></i>
+                    Menu principal
+                </h:link>
+
+            </section>
+
+            <section class="cal-cards">
+
+                <div class="cal-card">
+                    <div class="cal-card-icon">
+                        <i class="pi pi-calendar"></i>
+                    </div>
+                    <div class="cal-card-value">2026</div>
+                    <div class="cal-card-label">Ano de referência</div>
+                </div>
+
+                <div class="cal-card">
+                    <div class="cal-card-icon">
+                        <i class="pi pi-book"></i>
+                    </div>
+                    <div class="cal-card-value">01</div>
+                    <div class="cal-card-label">Evento demonstrativo</div>
+                </div>
+
+                <div class="cal-card">
+                    <div class="cal-card-icon">
+                        <i class="pi pi-bell"></i>
+                    </div>
+                    <div class="cal-card-value">20/11</div>
+                    <div class="cal-card-label">Avaliação cadastrada na página</div>
+                </div>
+
+            </section>
+
+            <div class="cal-layout">
+
+                <section class="cal-panel">
+
+                    <div class="cal-month-header">
+
+                        <div class="cal-month-name" id="calMonthTitle">
+                            Novembro de 2026
+                        </div>
+
+                        <div class="cal-month-actions">
+                            <button type="button"
+                                    class="cal-nav-button"
+                                    onclick="changeCalendarMonth(-1)"
+                                    aria-label="Mês anterior">
+                                <i class="pi pi-chevron-left"></i>
+                            </button>
+
+                            <button type="button"
+                                    class="cal-nav-button"
+                                    onclick="changeCalendarMonth(1)"
+                                    aria-label="Próximo mês">
+                                <i class="pi pi-chevron-right"></i>
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <div class="cal-weekdays">
+                        <div>Dom</div>
+                        <div>Seg</div>
+                        <div>Ter</div>
+                        <div>Qua</div>
+                        <div>Qui</div>
+                        <div>Sex</div>
+                        <div>Sáb</div>
+                    </div>
+
+                    <div class="cal-days" id="calDays"></div>
+
+                    <div class="cal-tip">
+                        <i class="pi pi-info-circle"></i>
+                        As datas destacadas representam eventos
+                        disponíveis nesta versão demonstrativa.
+                    </div>
+
+                </section>
+
+                <aside class="cal-panel">
+
+                    <div class="cal-panel-title">
+                        <i class="pi pi-bell"></i>
+                        <h2>Eventos acadêmicos</h2>
+                    </div>
+
+                    <div class="cal-event-item">
+
+                        <div class="cal-event-date">
+                            <strong>20</strong>
+                            <span>NOV</span>
+                        </div>
+
+                        <div class="cal-event-info">
+                            <h3>Avaliação Regimental (P1)</h3>
+
+                            <p>
+                                Engenharia de Software
+                                <br/>
+                                20 de novembro de 2026
+                            </p>
+
+                            <p:tag value="PROVA" severity="danger"/>
+                        </div>
+
+                    </div>
+
+                    <div class="cal-tip">
+                        Futuramente, os eventos serão carregados
+                        diretamente do banco de dados por meio
+                        do CalendarioBean.
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </main>
+
+        <script type="text/javascript">
+        //<![CDATA[
+            var calendarDate = new Date(2026, 10, 1);
+
+            function renderAcademicCalendar() {
+                var year = calendarDate.getFullYear();
+                var month = calendarDate.getMonth();
+
+                var monthTitle = document.getElementById("calMonthTitle");
+                var daysContainer = document.getElementById("calDays");
+
+                if (!monthTitle || !daysContainer) {
+                    return;
+                }
+
+                var monthNames = [
+                    "Janeiro", "Fevereiro", "Março", "Abril",
+                    "Maio", "Junho", "Julho", "Agosto",
+                    "Setembro", "Outubro", "Novembro", "Dezembro"
+                ];
+
+                monthTitle.textContent = monthNames[month] + " de " + year;
+                daysContainer.innerHTML = "";
+
+                var firstWeekday = new Date(year, month, 1).getDay();
+                var daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                for (var blank = 0; blank < firstWeekday; blank++) {
+                    var emptyCell = document.createElement("div");
+                    daysContainer.appendChild(emptyCell);
+                }
+
+                for (var day = 1; day <= daysInMonth; day++) {
+                    var cell = document.createElement("div");
+                    cell.className = "cal-day";
+                    cell.textContent = day;
+
+                    var today = new Date();
+
+                    if (day === today.getDate() &&
+                        month === today.getMonth() &&
+                        year === today.getFullYear()) {
+                        cell.classList.add("today");
+                    }
+
+                    if (day === 20 && month === 10 && year === 2026) {
+                        cell.classList.add("event");
+                        cell.title = "Avaliação Regimental (P1)";
+
+                        var dot = document.createElement("span");
+                        dot.className = "cal-event-dot";
+                        cell.appendChild(dot);
+                    }
+
+                    daysContainer.appendChild(cell);
+                }
+            }
+
+            function changeCalendarMonth(offset) {
+                calendarDate.setMonth(calendarDate.getMonth() + offset);
+                renderAcademicCalendar();
+            }
+
+            document.addEventListener("DOMContentLoaded", renderAcademicCalendar);
+        //]]>
+        </script>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,480 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>SLA | Portal Acadêmico UNICEPLAC</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <style>
+        :root {
+            --sla-navy: #071e43;
+            --sla-blue: #075bbd;
+            --sla-light: #edf4fc;
+            --sla-text: #1b304d;
+            --sla-muted: #7c8ba0;
+            --sla-border: #e4ebf4;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            min-height: 100%;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f7fc;
+            color: var(--sla-text);
+        }
+
+        .sla-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* MENU LATERAL */
+
+        .sla-sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: linear-gradient(180deg, #071e43, #0b356d);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 27px 16px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sla-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 10px 30px;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+
+        .sla-brand-icon {
+            width: 46px;
+            height: 46px;
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.13);
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+        }
+
+        .sla-brand-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .sla-brand-subtitle {
+            color: #b6cee9;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .sla-menu-label {
+            margin: 30px 12px 13px;
+            color: #8eafd5;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+        }
+
+        .sla-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .sla-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 14px 15px;
+            border-radius: 11px;
+            color: #c7d8ee !important;
+            text-decoration: none !important;
+            font-size: 13px;
+            font-weight: 500;
+            transition: .2s;
+        }
+
+        .sla-nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .sla-nav-link:hover {
+            background: rgba(255,255,255,.1);
+            color: white !important;
+            transform: translateX(3px);
+        }
+
+        .sla-nav-link.active {
+            background: linear-gradient(90deg, #0875d1, #1269b8);
+            color: white !important;
+            box-shadow: 0 5px 15px rgba(0,0,0,.1);
+        }
+
+        .sla-sidebar-bottom {
+            margin-top: auto;
+            padding: 25px 10px 0;
+        }
+
+        .sla-sidebar-info {
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 13px;
+            padding: 16px;
+            background: rgba(255,255,255,.06);
+        }
+
+        .sla-sidebar-info i {
+            font-size: 22px;
+            color: #8fcaff;
+        }
+
+        .sla-sidebar-info-title {
+            margin-top: 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .sla-sidebar-info-text {
+            margin-top: 6px;
+            color: #afc8e7;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        /* ÁREA PRINCIPAL */
+
+        .sla-main {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sla-topbar {
+            min-height: 86px;
+            background: white;
+            border-bottom: 1px solid var(--sla-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 18px 35px;
+        }
+
+        .sla-topbar-title {
+            color: #173b69;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .sla-topbar-subtitle {
+            margin-top: 5px;
+            color: var(--sla-muted);
+            font-size: 12px;
+        }
+
+        .sla-user-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .sla-avatar {
+            width: 43px;
+            height: 43px;
+            border-radius: 13px;
+            background: #e8f2ff;
+            color: #0873d5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .sla-user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sla-user-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #234367;
+        }
+
+        .sla-user-role {
+            color: #8191a5;
+            font-size: 11px;
+        }
+
+        .sla-logout.ui-button {
+            border-radius: 10px !important;
+            padding: 10px 14px !important;
+            background: #fff !important;
+            border: 1px solid #e0e8f2 !important;
+            color: #52677f !important;
+            box-shadow: none !important;
+        }
+
+        .sla-logout.ui-button:hover {
+            background: #fff1f1 !important;
+            border-color: #ffd5d5 !important;
+            color: #c0392b !important;
+        }
+
+        .sla-content {
+            flex: 1;
+            width: 100%;
+            padding: 30px 35px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .sla-footer {
+            text-align: center;
+            color: #9aa8b8;
+            font-size: 11px;
+            padding: 18px;
+        }
+
+        /* RESPONSIVIDADE */
+
+        @media (max-width: 1050px) {
+            .sla-sidebar {
+                width: 220px;
+            }
+
+            .sla-content {
+                padding: 25px;
+            }
+
+            .sla-topbar {
+                padding: 18px 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sla-layout {
+                flex-direction: column;
+            }
+
+            .sla-sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                padding: 16px;
+            }
+
+            .sla-brand {
+                padding-bottom: 15px;
+            }
+
+            .sla-menu-label,
+            .sla-sidebar-bottom {
+                display: none;
+            }
+
+            .sla-nav {
+                flex-direction: row;
+                overflow-x: auto;
+                margin-top: 15px;
+            }
+
+            .sla-nav-link {
+                flex-shrink: 0;
+                padding: 12px;
+            }
+
+            .sla-topbar {
+                padding: 18px;
+                flex-wrap: wrap;
+            }
+
+            .sla-content {
+                padding: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sla-topbar-title {
+                font-size: 15px;
+            }
+
+            .sla-user-details {
+                display: none;
+            }
+
+            .sla-content {
+                padding: 12px;
+            }
+        }
+    </style>
+</h:head>
+
+<h:body>
+
+    <div class="sla-layout">
+
+        <!-- MENU LATERAL -->
+
+        <aside class="sla-sidebar">
+
+            <div class="sla-brand">
+                <div class="sla-brand-icon">
+                    <i class="pi pi-graduation-cap"></i>
+                </div>
+
+                <div>
+                    <div class="sla-brand-title">SLA</div>
+                    <div class="sla-brand-subtitle">
+                        UNICEPLAC | Portal Acadêmico
+                    </div>
+                </div>
+            </div>
+
+            <div class="sla-menu-label">
+                NAVEGAÇÃO PRINCIPAL
+            </div>
+
+            <nav class="sla-nav">
+
+                <h:link outcome="/aluno/painel.xhtml"
+                        styleClass="sla-nav-link"
+                        rendered="#{loginBean.usuarioLogado.perfilNome eq 'ALUNO'}">
+                    <i class="pi pi-home"></i>
+                    <span>Meu Painel</span>
+                </h:link>
+
+                <h:link outcome="/professor/painel.xhtml"
+                        styleClass="sla-nav-link"
+                        rendered="#{loginBean.usuarioLogado.perfilNome eq 'PROFESSOR'}">
+                    <i class="pi pi-briefcase"></i>
+                    <span>Turmas e Salas</span>
+                </h:link>
+
+                <h:link outcome="/coordenacao/painel.xhtml"
+                        styleClass="sla-nav-link"
+                        rendered="#{loginBean.usuarioLogado.perfilNome eq 'COORDENADOR'}">
+                    <i class="pi pi-cog"></i>
+                    <span>Coordenação</span>
+                </h:link>
+
+            </nav>
+
+            <div class="sla-menu-label">
+                MÓDULOS ACADÊMICOS
+            </div>
+
+            <nav class="sla-nav">
+
+                <h:link outcome="/clubes.xhtml"
+                        styleClass="sla-nav-link">
+                    <i class="pi pi-users"></i>
+                    <span>Clubes Acadêmicos</span>
+                </h:link>
+
+                <h:link outcome="/calendario.xhtml"
+                        styleClass="sla-nav-link">
+                    <i class="pi pi-calendar"></i>
+                    <span>Calendário Escolar</span>
+                </h:link>
+
+            </nav>
+
+            <div class="sla-sidebar-bottom">
+                <div class="sla-sidebar-info">
+                    <i class="pi pi-info-circle"></i>
+
+                    <div class="sla-sidebar-info-title">
+                        Sistema Acadêmico
+                    </div>
+
+                    <div class="sla-sidebar-info-text">
+                        Consulte suas informações e acompanhe
+                        sua rotina acadêmica em um só lugar.
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- CONTEÚDO PRINCIPAL -->
+
+        <div class="sla-main">
+
+            <header class="sla-topbar">
+
+                <div>
+                    <div class="sla-topbar-title">
+                        Sistema de Localização Acadêmica
+                    </div>
+
+                    <div class="sla-topbar-subtitle">
+                        Portal Acadêmico UNICEPLAC
+                    </div>
+                </div>
+
+                <div class="sla-user-area">
+
+                    <div class="sla-avatar">
+                        <i class="pi pi-user"></i>
+                    </div>
+
+                    <div class="sla-user-details">
+                        <div class="sla-user-name">
+                            <h:outputText value="#{loginBean.usuarioLogado.nome}"/>
+                        </div>
+
+                        <div class="sla-user-role">
+                            <h:outputText value="#{loginBean.usuarioLogado.perfilNome}"/>
+                        </div>
+                    </div>
+
+                    <h:form>
+                        <p:commandButton value="Sair"
+                                         icon="pi pi-sign-out"
+                                         action="#{loginBean.logout}"
+                                         ajax="false"
+                                         styleClass="sla-logout"/>
+                    </h:form>
+
+                </div>
+
+            </header>
+
+            <main class="sla-content">
+                <ui:insert name="conteudo"/>
+            </main>
+
+            <footer class="sla-footer">
+                SLA | Sistema de Localização Acadêmica - UNICEPLAC
+            </footer>
+
+        </div>
+
+    </div>
+
+</h:body>
+</html>

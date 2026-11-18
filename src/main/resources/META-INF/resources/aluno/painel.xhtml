@@ -1,38 +1,526 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
 
-<h:head>
-    <title>Painel do Aluno - SLA</title>
-</h:head>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template.xhtml">
 
-<h:body style="padding: 20px; background-color: #f4f7f6;">
-    <h:form>
-        <h1>Bem-vindo, #{loginBean.usuarioLogado.nome} (Aluno)</h1>
-        
-        <p:panel header="Minhas Alocações e Aulas" style="margin-top: 20px;">
-            <p:dataTable value="#{loginBean.alocacoes}" var="a">
-                <p:column headerText="Disciplina">
-                    <h:outputText value="#{a.DISCIPLINA}" />
-                </p:column>
-                <p:column headerText="Bloco">
-                    <h:outputText value="#{a.BLOCO}" />
-                </p:column>
-                <p:column headerText="Sala">
-                    <h:outputText value="#{a.NUMERO}" />
-                </p:column>
-                <p:column headerText="Tipo">
-                    <h:outputText value="#{a.TIPO}" />
-                </p:column>
-                <p:column headerText="Horário">
-                    <h:outputText value="#{a.HORARIO}" />
-                </p:column>
-            </p:dataTable>
-        </p:panel>
-        
-        <p:commandButton value="Sair" action="/login.xhtml?faces-redirect=true" style="margin-top: 20px;" />
-    </h:form>
-</h:body>
-</html>
+    <ui:define name="conteudo">
+
+        <style>
+            .aluno-dashboard {
+                font-family: 'Segoe UI', Arial, sans-serif;
+                color: #203653;
+                padding: 8px 0 30px;
+            }
+
+            .aluno-hero {
+                position: relative;
+                overflow: hidden;
+                background: linear-gradient(120deg, #092e65, #0875d1);
+                border-radius: 22px;
+                padding: 35px;
+                color: white;
+                margin-bottom: 24px;
+                box-shadow: 0 12px 30px rgba(9, 65, 132, .14);
+            }
+
+            .aluno-hero::after {
+                content: "";
+                position: absolute;
+                width: 260px;
+                height: 260px;
+                border: 45px solid rgba(255,255,255,.06);
+                border-radius: 50%;
+                right: -120px;
+                top: -110px;
+            }
+
+            .aluno-hero h1 {
+                position: relative;
+                z-index: 1;
+                font-size: 30px;
+                color: white;
+                margin: 10px 0;
+            }
+
+            .aluno-hero p {
+                position: relative;
+                z-index: 1;
+                color: #dbeeff;
+                font-size: 14px;
+                line-height: 1.7;
+                max-width: 650px;
+                margin: 0;
+            }
+
+            .aluno-eyebrow {
+                position: relative;
+                z-index: 1;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 1.5px;
+                color: #b9dcff;
+            }
+
+            .aluno-cards {
+                display: grid;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                gap: 17px;
+                margin-bottom: 25px;
+            }
+
+            .aluno-card {
+                background: #fff;
+                border: 1px solid #e5ebf4;
+                border-radius: 17px;
+                padding: 22px;
+                box-shadow: 0 5px 20px rgba(20, 55, 100, .04);
+                transition: transform .2s, box-shadow .2s;
+            }
+
+            .aluno-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 28px rgba(20, 55, 100, .09);
+            }
+
+            .aluno-card-icon {
+                width: 46px;
+                height: 46px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #eaf3ff;
+                color: #0873d5;
+                border-radius: 13px;
+                font-size: 21px;
+                margin-bottom: 16px;
+            }
+
+            .aluno-card-value {
+                color: #143b70;
+                font-size: 25px;
+                font-weight: 800;
+                line-height: 1.3;
+            }
+
+            .aluno-card-label {
+                color: #7d8ca0;
+                font-size: 12px;
+                margin-top: 6px;
+            }
+
+            .aluno-grid {
+                display: grid;
+                grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+                gap: 20px;
+                margin-bottom: 24px;
+            }
+
+            .aluno-panel {
+                background: #fff;
+                border: 1px solid #e5ebf4;
+                border-radius: 18px;
+                padding: 24px;
+                box-shadow: 0 5px 20px rgba(20, 55, 100, .04);
+                min-width: 0;
+            }
+
+            .aluno-panel-heading {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                margin-bottom: 20px;
+            }
+
+            .aluno-panel-heading i {
+                color: #0873d5;
+                font-size: 21px;
+            }
+
+            .aluno-panel-heading h2 {
+                color: #173b69;
+                font-size: 19px;
+                margin: 0;
+            }
+
+            .aluno-panel-description {
+                font-size: 13px;
+                color: #8290a4;
+                line-height: 1.6;
+                margin-bottom: 20px;
+            }
+
+            .aluno-info-row {
+                display: flex;
+                align-items: flex-start;
+                gap: 13px;
+                padding: 15px 0;
+                border-bottom: 1px solid #edf1f6;
+            }
+
+            .aluno-info-row:last-child {
+                border-bottom: none;
+            }
+
+            .aluno-info-icon {
+                width: 38px;
+                height: 38px;
+                border-radius: 10px;
+                background: #edf5ff;
+                color: #0873d5;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+            .aluno-info-title {
+                font-size: 13px;
+                font-weight: 700;
+                color: #294567;
+            }
+
+            .aluno-info-text {
+                font-size: 12px;
+                color: #8190a3;
+                line-height: 1.6;
+                margin-top: 4px;
+            }
+
+            .aluno-table-wrap {
+                overflow-x: auto;
+            }
+
+            .aluno-table thead th {
+                background: #f0f5fc !important;
+                color: #38516f !important;
+                padding: 15px !important;
+                border: none !important;
+                font-size: 12px;
+            }
+
+            .aluno-table tbody td {
+                padding: 16px 15px !important;
+                border-color: #edf1f6 !important;
+                font-size: 13px;
+            }
+
+            .aluno-table tbody tr:hover {
+                background: #f7faff !important;
+            }
+
+            .aluno-disciplina {
+                font-weight: 700;
+                color: #153f75;
+            }
+
+            .aluno-local {
+                color: #2461a1;
+                font-weight: 600;
+            }
+
+            .aluno-local i {
+                margin-right: 6px;
+            }
+
+            .aluno-tip {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                background: #edf6ff;
+                border: 1px solid #dcecff;
+                color: #426080;
+                padding: 17px;
+                border-radius: 12px;
+                margin-top: 20px;
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .aluno-tip i {
+                color: #0873d5;
+                font-size: 20px;
+            }
+
+            @media (max-width: 1050px) {
+                .aluno-cards {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+
+                .aluno-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            @media (max-width: 600px) {
+                .aluno-cards {
+                    grid-template-columns: 1fr;
+                }
+
+                .aluno-hero {
+                    padding: 25px;
+                }
+
+                .aluno-hero h1 {
+                    font-size: 24px;
+                }
+
+                .aluno-panel {
+                    padding: 17px;
+                }
+            }
+        </style>
+
+        <main class="aluno-dashboard">
+
+            <section class="aluno-hero">
+
+                <div class="aluno-eyebrow">
+                    PORTAL ACADÊMICO / ÁREA DO ALUNO
+                </div>
+
+                <h1>
+                    Olá, #{loginBean.usuarioLogado.nome}! 👋
+                </h1>
+
+                <p>
+                    Bem-vindo ao seu espaço acadêmico.
+                    Acompanhe suas aulas, consulte seus horários
+                    e encontre facilmente as salas do campus.
+                </p>
+
+            </section>
+
+            <section class="aluno-cards">
+
+                <div class="aluno-card">
+                    <div class="aluno-card-icon">
+                        <i class="pi pi-book"></i>
+                    </div>
+                    <div class="aluno-card-value">
+                        #{loginBean.alocacoes.size()}
+                    </div>
+                    <div class="aluno-card-label">
+                        Aulas cadastradas
+                    </div>
+                </div>
+
+                <div class="aluno-card">
+                    <div class="aluno-card-icon">
+                        <i class="pi pi-calendar"></i>
+                    </div>
+                    <div class="aluno-card-value">
+                        Minha grade
+                    </div>
+                    <div class="aluno-card-label">
+                        Horários acadêmicos
+                    </div>
+                </div>
+
+                <div class="aluno-card">
+                    <div class="aluno-card-icon">
+                        <i class="pi pi-map-marker"></i>
+                    </div>
+                    <div class="aluno-card-value">
+                        Campus
+                    </div>
+                    <div class="aluno-card-label">
+                        Localização das salas
+                    </div>
+                </div>
+
+                <div class="aluno-card">
+                    <div class="aluno-card-icon">
+                        <i class="pi pi-user"></i>
+                    </div>
+                    <div class="aluno-card-value">
+                        Aluno
+                    </div>
+                    <div class="aluno-card-label">
+                        Perfil acadêmico
+                    </div>
+                </div>
+
+            </section>
+
+            <div class="aluno-grid">
+
+                <section class="aluno-panel">
+
+                    <div class="aluno-panel-heading">
+                        <i class="pi pi-calendar"></i>
+                        <h2>Minha rotina acadêmica</h2>
+                    </div>
+
+                    <p class="aluno-panel-description">
+                        Organize sua semana consultando os horários
+                        e as salas registrados no sistema.
+                    </p>
+
+                    <div class="aluno-info-row">
+                        <div class="aluno-info-icon">
+                            <i class="pi pi-book"></i>
+                        </div>
+                        <div>
+                            <div class="aluno-info-title">
+                                Disciplinas e professores
+                            </div>
+                            <div class="aluno-info-text">
+                                Consulte os professores responsáveis
+                                pelas aulas na sua grade.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="aluno-info-row">
+                        <div class="aluno-info-icon">
+                            <i class="pi pi-map-marker"></i>
+                        </div>
+                        <div>
+                            <div class="aluno-info-title">
+                                Localização das aulas
+                            </div>
+                            <div class="aluno-info-text">
+                                Identifique o bloco, a sala e o tipo
+                                de ambiente de cada disciplina.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="aluno-info-row">
+                        <div class="aluno-info-icon">
+                            <i class="pi pi-clock"></i>
+                        </div>
+                        <div>
+                            <div class="aluno-info-title">
+                                Horários organizados
+                            </div>
+                            <div class="aluno-info-text">
+                                Confira o dia da semana e o horário
+                                de início e término de cada aula.
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <aside class="aluno-panel">
+
+                    <div class="aluno-panel-heading">
+                        <i class="pi pi-user"></i>
+                        <h2>Meu perfil</h2>
+                    </div>
+
+                    <div class="aluno-info-row">
+                        <div class="aluno-info-icon">
+                            <i class="pi pi-id-card"></i>
+                        </div>
+                        <div>
+                            <div class="aluno-info-title">
+                                Nome
+                            </div>
+                            <div class="aluno-info-text">
+                                <h:outputText value="#{loginBean.usuarioLogado.nome}"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="aluno-info-row">
+                        <div class="aluno-info-icon">
+                            <i class="pi pi-envelope"></i>
+                        </div>
+                        <div>
+                            <div class="aluno-info-title">
+                                E-mail institucional
+                            </div>
+                            <div class="aluno-info-text">
+                                <h:outputText value="#{loginBean.usuarioLogado.email}"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="aluno-info-row">
+                        <div class="aluno-info-icon">
+                            <i class="pi pi-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <div class="aluno-info-title">
+                                Tipo de acesso
+                            </div>
+                            <div class="aluno-info-text">
+                                Estudante
+                            </div>
+                        </div>
+                    </div>
+
+                </aside>
+
+            </div>
+
+            <section class="aluno-panel">
+
+                <div class="aluno-panel-heading">
+                    <i class="pi pi-list"></i>
+                    <h2>Minha grade de aulas</h2>
+                </div>
+
+                <p class="aluno-panel-description">
+                    Informações sobre disciplinas, professores,
+                    salas e horários cadastrados.
+                </p>
+
+                <div class="aluno-table-wrap">
+
+                    <p:dataTable value="#{loginBean.alocacoes}"
+                                 var="a"
+                                 styleClass="aluno-table"
+                                 emptyMessage="Nenhuma aula encontrada."
+                                 stripedRows="true"
+                                 reflow="true">
+
+                        <p:column headerText="Disciplina">
+                            <h:outputText value="#{a.DISCIPLINA}"
+                                          styleClass="aluno-disciplina"/>
+                        </p:column>
+
+                        <p:column headerText="Professor">
+                            <h:outputText value="#{a.PROFESSOR}"/>
+                        </p:column>
+
+                        <p:column headerText="Localização">
+                            <span class="aluno-local">
+                                <i class="pi pi-map-marker"></i>
+                                <h:outputText value="#{a.BLOCO} - #{a.NUMERO}"/>
+                            </span>
+                        </p:column>
+
+                        <p:column headerText="Tipo">
+                            <p:tag value="#{a.TIPO}"
+                                   severity="#{a.TIPO eq 'LABORATORIO' ? 'warn' : 'info'}"/>
+                        </p:column>
+
+                        <p:column headerText="Horário">
+                            <h:outputText value="#{a.DIA_SEMANA}"/>
+                            <br/>
+                            <h:outputText value="#{a.HORARIO_INICIO} - #{a.HORARIO_FIM}"/>
+                        </p:column>
+
+                    </p:dataTable>
+
+                </div>
+
+                <div class="aluno-tip">
+                    <i class="pi pi-info-circle"></i>
+                    As informações exibidas são obtidas
+                    dos registros acadêmicos disponíveis
+                    no Sistema de Localização Acadêmica.
+                </div>
+
+            </section>
+
+        </main>
+
+    </ui:define>
+
+</ui:composition>

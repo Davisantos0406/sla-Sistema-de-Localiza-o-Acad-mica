@@ -1,0 +1,1293 @@
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+
+                template="/template.xhtml">
+
+    <ui:define name="conteudo">
+
+        <style>
+
+            .club-page {
+
+                font-family: 'Segoe UI', Arial, sans-serif;
+
+                color: #243b57;
+
+                padding-bottom: 35px;
+
+            }
+
+            .club-hero {
+
+                background: linear-gradient(120deg, #071e43, #086bc5);
+
+                border-radius: 22px;
+
+                padding: 42px;
+
+                color: white;
+
+                position: relative;
+
+                overflow: hidden;
+
+                margin-bottom: 25px;
+
+            }
+
+            .club-hero::after {
+
+                content: "";
+
+                position: absolute;
+
+                width: 300px;
+
+                height: 300px;
+
+                border: 50px solid rgba(255,255,255,.05);
+
+                border-radius: 50%;
+
+                right: -140px;
+
+                top: -130px;
+
+            }
+
+            .club-hero-content {
+
+                position: relative;
+
+                z-index: 1;
+
+                max-width: 650px;
+
+            }
+
+            .club-eyebrow {
+
+                color: #b9dcff;
+
+                font-size: 12px;
+
+                font-weight: 800;
+
+                letter-spacing: 1.4px;
+
+            }
+
+            .club-hero h1 {
+
+                font-size: 34px;
+
+                color: white;
+
+                margin: 15px 0;
+
+                line-height: 1.2;
+
+            }
+
+            .club-hero p {
+
+                font-size: 14px;
+
+                line-height: 1.8;
+
+                color: #dbeaff;
+
+                margin: 0;
+
+            }
+
+            .club-menu-link {
+
+                display: inline-flex;
+
+                align-items: center;
+
+                gap: 9px;
+
+                margin-top: 20px;
+
+                padding: 10px 15px;
+
+                border: 1px solid rgba(255,255,255,.55);
+
+                border-radius: 8px;
+
+                color: white !important;
+
+                text-decoration: none !important;
+
+                font-size: 13px;
+
+                font-weight: 700;
+
+                transition: background .2s ease;
+
+            }
+
+            .club-menu-link:hover {
+
+                background: rgba(255,255,255,.14);
+
+            }
+
+            .club-stats {
+
+                display: grid;
+
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+
+                gap: 17px;
+
+                margin-bottom: 30px;
+
+            }
+
+            .club-stat {
+
+                background: white;
+
+                border: 1px solid #e5ebf4;
+
+                border-radius: 16px;
+
+                padding: 22px;
+
+                display: flex;
+
+                align-items: center;
+
+                gap: 15px;
+
+            }
+
+            .club-stat-icon {
+
+                width: 49px;
+
+                height: 49px;
+
+                border-radius: 13px;
+
+                background: #eaf3ff;
+
+                color: #0873d5;
+
+                display: flex;
+
+                align-items: center;
+
+                justify-content: center;
+
+                font-size: 22px;
+
+                flex-shrink: 0;
+
+            }
+
+            .club-stat strong {
+
+                display: block;
+
+                font-size: 22px;
+
+                color: #173b69;
+
+            }
+
+            .club-stat span {
+
+                font-size: 12px;
+
+                color: #8493a6;
+
+            }
+
+            .club-section-heading {
+
+                display: flex;
+
+                align-items: center;
+
+                justify-content: space-between;
+
+                gap: 15px;
+
+                margin-bottom: 20px;
+
+            }
+
+            .club-section-heading h2 {
+
+                margin: 0;
+
+                font-size: 22px;
+
+                color: #173b69;
+
+            }
+
+            .club-section-heading p {
+
+                margin: 6px 0 0;
+
+                color: #8290a4;
+
+                font-size: 13px;
+
+            }
+
+            .club-search-panel {
+
+                background: white;
+
+                border: 1px solid #e5ebf4;
+
+                border-radius: 17px;
+
+                padding: 20px;
+
+                margin-bottom: 24px;
+
+            }
+
+            .club-search-box {
+
+                position: relative;
+
+                margin-bottom: 18px;
+
+            }
+
+            .club-search-box i {
+
+                position: absolute;
+
+                left: 17px;
+
+                top: 50%;
+
+                transform: translateY(-50%);
+
+                color: #8296af;
+
+            }
+
+            .club-search-box input {
+
+                width: 100%;
+
+                padding: 15px 16px 15px 46px;
+
+                border: 1px solid #dfe8f3;
+
+                border-radius: 12px;
+
+                background: #fbfdff;
+
+                color: #234363;
+
+                font-family: inherit;
+
+                font-size: 13px;
+
+                outline: none;
+
+                box-sizing: border-box;
+
+            }
+
+            .club-search-box input:focus {
+
+                border-color: #0873d5;
+
+                box-shadow: 0 0 0 3px rgba(8,115,213,.1);
+
+            }
+
+            .club-filters {
+
+                display: flex;
+
+                gap: 9px;
+
+                flex-wrap: wrap;
+
+            }
+
+            .club-filter {
+
+                border: 1px solid #e0e8f2;
+
+                background: #f8fbff;
+
+                color: #57718e;
+
+                border-radius: 20px;
+
+                padding: 10px 17px;
+
+                cursor: pointer;
+
+                font-family: inherit;
+
+                font-size: 12px;
+
+                font-weight: 700;
+
+                transition: .2s;
+
+            }
+
+            .club-filter:hover {
+
+                background: #edf5ff;
+
+            }
+
+            .club-filter.active {
+
+                background: #086bc5;
+
+                border-color: #086bc5;
+
+                color: white;
+
+            }
+
+            .club-grid {
+
+                display: grid;
+
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+
+                gap: 22px;
+
+            }
+
+            .club-card {
+
+                background: white;
+
+                border: 1px solid #e5ebf4;
+
+                border-radius: 18px;
+
+                overflow: hidden;
+
+                display: flex;
+
+                flex-direction: column;
+
+                transition: .2s;
+
+            }
+
+            .club-card:hover {
+
+                transform: translateY(-4px);
+
+                box-shadow: 0 14px 35px rgba(20,55,100,.09);
+
+            }
+
+            .club-card-banner {
+
+                height: 140px;
+
+                display: flex;
+
+                align-items: center;
+
+                justify-content: center;
+
+                background: linear-gradient(120deg, #0a468c, #23a3dc);
+
+                color: white;
+
+                font-size: 52px;
+
+            }
+
+            .club-card-banner img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+
+            .club-card-banner.algorithms {
+
+                background: linear-gradient(120deg, #363b83, #7479dd);
+
+            }
+
+            .club-card-body {
+
+                padding: 25px;
+
+                flex: 1;
+
+                display: flex;
+
+                flex-direction: column;
+
+            }
+
+            .club-category {
+
+                display: inline-flex;
+
+                align-self: flex-start;
+
+                background: #e7f6ee;
+
+                color: #238354;
+
+                padding: 7px 13px;
+
+                border-radius: 20px;
+
+                font-size: 11px;
+
+                font-weight: 800;
+
+                margin-bottom: 16px;
+
+            }
+
+            .club-category.programming {
+
+                background: #ecebff;
+
+                color: #5c56ad;
+
+            }
+
+            .club-card h3 {
+
+                font-size: 21px;
+
+                color: #173b69;
+
+                margin: 0 0 12px;
+
+            }
+
+            .club-card-description {
+
+                color: #77889d;
+
+                font-size: 13px;
+
+                line-height: 1.8;
+
+                margin: 0 0 22px;
+
+            }
+
+            .club-leader {
+
+                display: flex;
+
+                align-items: center;
+
+                gap: 10px;
+
+                border-top: 1px solid #edf1f6;
+
+                padding-top: 18px;
+
+                margin-top: auto;
+
+            }
+
+            .club-leader-icon {
+
+                width: 38px;
+
+                height: 38px;
+
+                border-radius: 10px;
+
+                background: #edf5ff;
+
+                color: #0873d5;
+
+                display: flex;
+
+                align-items: center;
+
+                justify-content: center;
+
+            }
+
+            .club-leader small {
+
+                display: block;
+
+                color: #91a0b0;
+
+                font-size: 11px;
+
+            }
+
+            .club-leader strong {
+
+                display: block;
+
+                color: #304967;
+
+                font-size: 13px;
+
+                margin-top: 3px;
+
+            }
+
+            .club-card-footer {
+
+                padding: 17px 25px;
+
+                border-top: 1px solid #edf1f6;
+
+                background: #fcfdff;
+
+            }
+
+            .club-detail-button {
+
+                width: 100%;
+
+                padding: 13px;
+
+                border: none;
+
+                border-radius: 10px;
+
+                background: #086bc5;
+
+                color: white;
+
+                font-size: 13px;
+
+                font-weight: 700;
+
+                font-family: inherit;
+
+                cursor: pointer;
+
+                transition: .2s;
+
+            }
+
+            .club-detail-button:hover {
+
+                background: #064f98;
+
+            }
+
+            .club-empty {
+
+                display: none;
+
+                background: white;
+
+                border: 1px dashed #d6e3f1;
+
+                border-radius: 16px;
+
+                padding: 45px 20px;
+
+                text-align: center;
+
+                color: #8290a4;
+
+                margin-top: 20px;
+
+            }
+
+            .club-empty i {
+
+                font-size: 35px;
+
+                color: #9db6d2;
+
+            }
+
+            .club-empty h3 {
+
+                color: #345475;
+
+            }
+
+            .club-modal-overlay {
+
+                position: fixed;
+
+                inset: 0;
+
+                background: rgba(5,20,42,.65);
+
+                z-index: 9999;
+
+                display: none;
+
+                align-items: center;
+
+                justify-content: center;
+
+                padding: 20px;
+
+            }
+
+            .club-modal-overlay.open {
+
+                display: flex;
+
+            }
+
+            .club-modal {
+
+                background: white;
+
+                border-radius: 19px;
+
+                width: 100%;
+
+                max-width: 520px;
+
+                max-height: 90vh;
+
+                overflow-y: auto;
+
+                padding: 30px;
+
+                box-shadow: 0 25px 70px rgba(0,0,0,.2);
+
+            }
+
+            .club-modal-top {
+
+                display: flex;
+
+                align-items: center;
+
+                justify-content: space-between;
+
+                gap: 15px;
+
+            }
+
+            .club-modal-top h2 {
+
+                margin: 0;
+
+                font-size: 23px;
+
+                color: #173b69;
+
+            }
+
+            .club-modal-close {
+
+                background: #f0f4fa;
+
+                border: none;
+
+                width: 35px;
+
+                height: 35px;
+
+                border-radius: 9px;
+
+                cursor: pointer;
+
+                color: #45617d;
+
+                font-size: 17px;
+
+            }
+
+            .club-modal-content {
+
+                margin-top: 20px;
+
+                color: #60758c;
+
+                font-size: 14px;
+
+                line-height: 1.8;
+
+            }
+
+            .club-modal-label {
+
+                color: #173b69;
+
+                font-weight: 800;
+
+                margin-top: 20px;
+
+                margin-bottom: 5px;
+
+            }
+
+            .club-modal-note {
+
+                margin-top: 24px;
+
+                padding: 15px;
+
+                border-radius: 10px;
+
+                background: #edf6ff;
+
+                color: #426080;
+
+                font-size: 12px;
+
+            }
+
+            @media (max-width: 900px) {
+
+                .club-stats {
+
+                    grid-template-columns: 1fr;
+
+                }
+
+                .club-grid {
+
+                    grid-template-columns: 1fr;
+
+                }
+
+            }
+
+            @media (max-width: 600px) {
+
+                .club-hero {
+
+                    padding: 26px;
+
+                }
+
+                .club-hero h1 {
+
+                    font-size: 26px;
+
+                }
+
+                .club-card-body {
+
+                    padding: 20px;
+
+                }
+
+                .club-modal {
+
+                    padding: 22px;
+
+                }
+
+            }
+
+        </style>
+
+        <main class="club-page">
+
+            <!-- CABEÇALHO -->
+
+            <section class="club-hero">
+
+                <div class="club-hero-content">
+
+                    <div class="club-eyebrow">
+
+                        COMUNIDADE ACADÊMICA / SLA
+
+                    </div>
+
+                    <h1>Descubra sua próxima comunidade.</h1>
+
+                    <p>
+
+                        Conecte-se com estudantes, explore projetos,
+
+                        desenvolva habilidades e conheça
+
+                        novas oportunidades além da sala de aula.
+
+                    </p>
+
+                    <a href="#{loginBean.usuarioLogado.perfilNome eq 'PROFESSOR' ? '/professor/painel.xhtml' : (loginBean.usuarioLogado.perfilNome eq 'COORDENADOR' ? '/coordenacao/painel.xhtml' : '/aluno/painel.xhtml')}"
+
+                       class="club-menu-link">
+
+                        <i class="pi pi-arrow-left"></i>
+
+                        Menu principal
+
+                    </a>
+
+                </div>
+
+            </section>
+
+            <!-- INDICADORES -->
+
+            <section class="club-stats">
+
+                <div class="club-stat">
+
+                    <div class="club-stat-icon">
+
+                        <i class="pi pi-users"></i>
+
+                    </div>
+
+                    <div>
+
+                        <strong>#{clubeBean.clubes.size()}</strong>
+
+                        <span>Clubes apresentados</span>
+
+                    </div>
+
+                </div>
+
+                <div class="club-stat">
+
+                    <div class="club-stat-icon">
+
+                        <i class="pi pi-code"></i>
+
+                    </div>
+
+                    <div>
+
+                        <strong>08</strong>
+
+                        <span>Áreas de interesse</span>
+
+                    </div>
+
+                </div>
+
+                <div class="club-stat">
+
+                    <div class="club-stat-icon">
+
+                        <i class="pi pi-graduation-cap"></i>
+
+                    </div>
+
+                    <div>
+
+                        <strong>Extensão</strong>
+
+                        <span>Projetos acadêmicos</span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- PESQUISA -->
+
+            <section>
+
+                <div class="club-section-heading">
+
+                    <div>
+
+                        <h2>Explorar comunidades</h2>
+
+                        <p>Encontre clubes de acordo com seus interesses.</p>
+
+                    </div>
+
+                </div>
+
+                <div class="club-search-panel">
+
+                    <div class="club-search-box">
+
+                        <i class="pi pi-search"></i>
+
+                        <input type="text"
+
+                               id="clubSearch"
+
+                               placeholder="Buscar clube, tecnologia ou atividade..."
+
+                               oninput="filterClubs()"/>
+
+                    </div>
+
+                    <div class="club-filters">
+
+                        <button type="button"
+
+                                class="club-filter active"
+
+                                data-category="todos"
+
+                                onclick="setClubCategory('todos', this)">
+
+                            Todos os clubes
+
+                        </button>
+
+                        <button type="button"
+
+                                class="club-filter"
+
+                                data-category="tecnologia"
+
+                                onclick="setClubCategory('tecnologia', this)">
+
+                            Tecnologia
+
+                        </button>
+
+                        <button type="button"
+
+                                class="club-filter"
+
+                                data-category="programacao"
+
+                                onclick="setClubCategory('programacao', this)">
+
+                            Programação
+
+                        </button>
+                        <button type="button" class="club-filter" data-category="seguranca" onclick="setClubCategory('seguranca', this)">Segurança</button>
+                        <button type="button" class="club-filter" data-category="inteligencia artificial" onclick="setClubCategory('inteligencia artificial', this)">Inteligência Artificial</button>
+                        <button type="button" class="club-filter" data-category="infraestrutura" onclick="setClubCategory('infraestrutura', this)">Infraestrutura</button>
+                        <button type="button" class="club-filter" data-category="desenvolvimento de jogos" onclick="setClubCategory('desenvolvimento de jogos', this)">Jogos</button>
+                        <button type="button" class="club-filter" data-category="dados" onclick="setClubCategory('dados', this)">Dados</button>
+                        <button type="button" class="club-filter" data-category="inovacao" onclick="setClubCategory('inovacao', this)">Inovação</button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- CLUBES -->
+            <section class="club-grid" id="clubGrid">
+                <ui:repeat value="#{clubeBean.clubes}" var="clube">
+                    <article class="club-card"
+                             data-category="#{clube.categoria}"
+                             data-search="#{clube.nome} #{clube.categoria} #{clube.descricao} #{clube.lider}">
+                        <div class="club-card-banner">
+                            <ui:fragment rendered="#{clube.id eq 1}">
+                                <img src="#{request.contextPath}/images/clubes/robotica.jpg" alt="Robótica e IoT"/>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{clube.id eq 2}">
+                                <img src="#{request.contextPath}/images/clubes/algoritmos.jpg" alt="Liga de Algoritmos"/>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{clube.id eq 3}">
+                                <img src="#{request.contextPath}/images/clubes/seguranca.jpg" alt="Segurança da Informação"/>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{clube.id eq 4}">
+                                <img src="#{request.contextPath}/images/clubes/inteligencia-artificial.jpg" alt="Inteligência Artificial"/>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{clube.id eq 5}">
+                                <img src="#{request.contextPath}/images/clubes/redes.jpg" alt="Redes e Infraestrutura"/>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{clube.id eq 6}">
+                                <img src="#{request.contextPath}/images/clubes/jogos.jpg" alt="Desenvolvimento de Jogos"/>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{clube.id eq 7}">
+                                <img src="#{request.contextPath}/images/clubes/dados.jpg" alt="Ciência de Dados"/>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{clube.id eq 8}">
+                                <img src="#{request.contextPath}/images/clubes/web.jpg" alt="Desenvolvimento Web"/>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{clube.id eq 9}">
+                                <img src="#{request.contextPath}/images/clubes/mobile.jpg" alt="Desenvolvimento Mobile"/>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{clube.id eq 10}">
+                                <img src="#{request.contextPath}/images/clubes/inovacao.jpg" alt="Inovação e Empreendedorismo"/>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{clube.id lt 1 or clube.id gt 10}">
+                                <i class="pi pi-users"></i>
+                            </ui:fragment>
+                        </div>
+                        <div class="club-card-body">
+                            <span class="club-category"><h:outputText value="#{clube.categoria}"/></span>
+                            <h3><h:outputText value="#{clube.nome}"/></h3>
+                            <p class="club-card-description"><h:outputText value="#{clube.descricao}"/></p>
+                            <div class="club-leader">
+                                <div class="club-leader-icon"><i class="pi pi-user"></i></div>
+                                <div><small>Responsável</small><strong><h:outputText value="#{clube.lider}"/></strong></div>
+                            </div>
+                        </div>
+                        <div class="club-card-footer">
+                            <button type="button" class="club-detail-button" onclick="openClubDetails(this)">
+                                <i class="pi pi-eye"></i> Ver detalhes
+                            </button>
+                        </div>
+                    </article>
+                </ui:repeat>
+            </section>
+
+            <!-- NENHUM RESULTADO -->
+
+            <div class="club-empty" id="clubEmpty">
+
+                <i class="pi pi-search"></i>
+
+                <h3>Nenhum clube encontrado</h3>
+
+                <p>
+
+                    Tente pesquisar outro nome ou selecionar
+
+                    uma categoria diferente.
+
+                </p>
+
+            </div>
+
+            <!-- JANELA DE DETALHES -->
+
+            <div class="club-modal-overlay"
+
+                 id="clubModalOverlay"
+
+                 onclick="closeClubOnBackdrop(event)">
+
+                <div class="club-modal"
+
+                     role="dialog"
+
+                     aria-modal="true"
+
+                     aria-labelledby="clubModalTitle">
+
+                    <div class="club-modal-top">
+
+                        <h2 id="clubModalTitle">
+
+                            Detalhes do clube
+
+                        </h2>
+
+                        <button type="button"
+
+                                class="club-modal-close"
+
+                                onclick="closeClubDetails()"
+
+                                aria-label="Fechar detalhes">
+
+                            <i class="pi pi-times"></i>
+
+                        </button>
+
+                    </div>
+
+                    <div class="club-modal-content">
+
+                        <div class="club-modal-label">
+
+                            Sobre o clube
+
+                        </div>
+
+                        <div id="clubModalDescription"></div>
+
+                        <div class="club-modal-label">
+
+                            Responsável
+
+                        </div>
+
+                        <div id="clubModalLeader"></div>
+
+                        <div class="club-modal-label">
+
+                            Área de interesse
+
+                        </div>
+
+                        <div id="clubModalCategory"></div>
+
+                        <div class="club-modal-note">
+
+                            <i class="pi pi-info-circle"></i>
+
+                            As inscrições ainda não estão disponíveis
+
+                            nesta versão do portal.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+        <script type="text/javascript">
+
+        //<![CDATA[
+
+            var selectedClubCategory = "todos";
+
+            var lastClubTrigger = null;
+
+            function normalizeClubText(value) {
+
+                return (value || "")
+
+                    .normalize("NFD")
+
+                    .replace(/[\u0300-\u036f]/g, "")
+
+                    .toLowerCase();
+
+            }
+
+            function filterClubs() {
+
+                var search = normalizeClubText(
+
+                    document.getElementById("clubSearch").value
+
+                );
+
+                var cards = document.querySelectorAll(".club-card");
+
+                var visibleCount = 0;
+
+                cards.forEach(function(card) {
+
+                    var category = normalizeClubText(card.getAttribute("data-category"));
+
+                    var searchText = normalizeClubText(
+
+                        card.getAttribute("data-search")
+
+                    );
+
+                    var matchesCategory =
+
+                        selectedClubCategory === "todos" ||
+
+                        category === selectedClubCategory ||
+                        (selectedClubCategory === "seguranca" && category === "seguranca da informacao");
+
+                    var matchesSearch = searchText.indexOf(search) !== -1;
+
+                    var visible = matchesCategory && matchesSearch;
+
+                    card.style.display = visible ? "" : "none";
+
+                    if (visible) {
+
+                        visibleCount++;
+
+                    }
+
+                });
+
+                document.getElementById("clubEmpty").style.display =
+
+                    visibleCount === 0 ? "block" : "none";
+
+            }
+
+            function setClubCategory(category, button) {
+
+                selectedClubCategory = category;
+
+                document.querySelectorAll(".club-filter")
+
+                    .forEach(function(item) {
+
+                        item.classList.remove("active");
+
+                        item.setAttribute("aria-pressed", "false");
+
+                    });
+
+                button.classList.add("active");
+
+                button.setAttribute("aria-pressed", "true");
+
+                filterClubs();
+
+            }
+
+            function openClubDetails(button) {
+                var card = button.closest(".club-card");
+                if (!card) return;
+                lastClubTrigger = button;
+                document.getElementById("clubModalTitle").textContent = card.querySelector("h3").textContent;
+                document.getElementById("clubModalDescription").textContent = card.querySelector(".club-card-description").textContent;
+                document.getElementById("clubModalLeader").textContent = card.querySelector(".club-leader strong").textContent;
+                document.getElementById("clubModalCategory").textContent = card.querySelector(".club-category").textContent;
+                document.getElementById("clubModalOverlay").classList.add("open");
+                document.body.style.overflow = "hidden";
+                document.querySelector(".club-modal-close").focus();
+            }
+
+            function closeClubDetails() {
+
+                document.getElementById("clubModalOverlay")
+
+                    .classList.remove("open");
+
+                document.body.style.overflow = "";
+
+                if (lastClubTrigger) {
+
+                    lastClubTrigger.focus();
+
+                }
+
+            }
+
+            function closeClubOnBackdrop(event) {
+
+                if (event.target.id === "clubModalOverlay") {
+
+                    closeClubDetails();
+
+                }
+
+            }
+
+            document.addEventListener("keydown", function(event) {
+
+                if (event.key === "Escape") {
+
+                    closeClubDetails();
+
+                }
+
+            });
+
+        //]]>
+
+        </script>
+
+    </ui:define>
+
+</ui:composition>

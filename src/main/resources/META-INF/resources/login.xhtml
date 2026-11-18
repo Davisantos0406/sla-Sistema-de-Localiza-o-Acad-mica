@@ -1,37 +1,539 @@
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-    <title>SLA - Login</title>
+    <title>SLA | Portal Acadêmico UNICEPLAC</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <style>
+        :root {
+            --primary: #0757b8;
+            --primary-dark: #082d63;
+            --text: #172b4d;
+            --muted: #78869b;
+            --border: #dce5f0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            min-height: 100%;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: #edf3fa;
+        }
+
+        .page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+            background:
+                radial-gradient(circle at 15% 20%, #d7e9ff 0, transparent 35%),
+                radial-gradient(circle at 90% 85%, #d9e6ff 0, transparent 35%),
+                #f3f7fc;
+        }
+
+        .login-shell {
+            width: 100%;
+            max-width: 1120px;
+            min-height: 640px;
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            background: white;
+            border-radius: 26px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(18, 48, 91, .13);
+            animation: appear .7s ease both;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 48px;
+            background: linear-gradient(145deg, #071e43, #084b9b 65%, #087bdc);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            width: 460px;
+            height: 460px;
+            border: 1px solid rgba(255,255,255,.13);
+            border-radius: 50%;
+            right: -220px;
+            top: 70px;
+            box-shadow:
+                0 0 0 65px rgba(255,255,255,.035),
+                0 0 0 130px rgba(255,255,255,.025);
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: rgba(48, 169, 255, .18);
+            filter: blur(60px);
+            bottom: -100px;
+            left: -100px;
+        }
+
+        .hero > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand-symbol {
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,.13);
+            border: 1px solid rgba(255,255,255,.2);
+            border-radius: 17px;
+            backdrop-filter: blur(12px);
+            font-size: 27px;
+        }
+
+        .brand-name {
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: .5px;
+        }
+
+        .brand-caption {
+            margin-top: 4px;
+            font-size: 12px;
+            color: #c8dff9;
+        }
+
+        .hero-content {
+            max-width: 440px;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 14px;
+            border-radius: 30px;
+            background: rgba(255,255,255,.11);
+            border: 1px solid rgba(255,255,255,.16);
+            color: #dcecff;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .hero h1 {
+            font-size: clamp(34px, 3.5vw, 49px);
+            line-height: 1.13;
+            letter-spacing: -1.5px;
+            margin: 25px 0 18px;
+            color: white;
+        }
+
+        .hero h1 span {
+            color: #7dc8ff;
+        }
+
+        .hero-description {
+            color: #cbdff6;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .feature {
+            padding: 10px 13px;
+            background: rgba(255,255,255,.09);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 10px;
+            font-size: 12px;
+            color: #eef7ff;
+        }
+
+        .feature i {
+            margin-right: 7px;
+            color: #8bd3ff;
+        }
+
+        .hero-footer {
+            font-size: 12px;
+            color: #b4d2f2;
+        }
+
+        .form-panel {
+            padding: 65px 65px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 42px;
+        }
+
+        .form-badge {
+            background: #edf5ff;
+            color: #0757b8;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 9px 13px;
+            border-radius: 30px;
+        }
+
+        .form-panel h2 {
+            color: #142b4c;
+            font-size: 34px;
+            letter-spacing: -1px;
+            margin: 0 0 12px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: 14px;
+            margin: 0 0 32px;
+        }
+
+        .field {
+            margin-bottom: 23px;
+        }
+
+        .field-label {
+            display: block;
+            color: #30445e;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .field-label i {
+            color: #0874d6;
+            margin-right: 7px;
+        }
+
+        .input-modern.ui-inputfield {
+            width: 100%;
+            padding: 15px 16px !important;
+            border-radius: 11px !important;
+            border: 1px solid var(--border) !important;
+            background: #fbfdff !important;
+            font-size: 14px !important;
+            transition: .2s;
+        }
+
+        .input-modern.ui-inputfield:focus {
+            border-color: #2684e8 !important;
+            box-shadow: 0 0 0 4px rgba(38,132,232,.11) !important;
+        }
+
+        .password-wrapper,
+        .password-wrapper .ui-password,
+        .password-wrapper input {
+            width: 100%;
+        }
+
+        .password-wrapper input {
+            padding: 15px 16px !important;
+            border-radius: 11px !important;
+            border: 1px solid var(--border) !important;
+            background: #fbfdff !important;
+        }
+
+        .password-wrapper input:focus {
+            border-color: #2684e8 !important;
+            box-shadow: 0 0 0 4px rgba(38,132,232,.11) !important;
+        }
+
+        .login-action.ui-button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 14px !important;
+            border: none !important;
+            border-radius: 11px !important;
+            background: linear-gradient(90deg, #0758b9, #0984e7) !important;
+            box-shadow: 0 8px 20px rgba(7, 88, 185, .2);
+            font-weight: 700 !important;
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .login-action.ui-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(7, 88, 185, .28);
+        }
+
+        .login-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #8a98aa;
+            font-size: 12px;
+            margin-top: 32px;
+        }
+
+        .login-note i {
+            color: #1785df;
+        }
+
+        .bottom-line {
+            margin-top: 45px;
+            text-align: center;
+            color: #9ba7b7;
+            font-size: 11px;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 850px) {
+            .login-shell {
+                grid-template-columns: 1fr;
+                max-width: 560px;
+            }
+
+            .hero {
+                min-height: 280px;
+                padding: 30px;
+                gap: 28px;
+            }
+
+            .hero h1 {
+                font-size: 30px;
+                margin: 15px 0;
+            }
+
+            .hero-description {
+                font-size: 13px;
+            }
+
+            .features, .hero-footer {
+                display: none;
+            }
+
+            .form-panel {
+                padding: 40px 30px;
+            }
+
+            .form-top {
+                margin-bottom: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page {
+                padding: 12px;
+            }
+
+            .hero {
+                padding: 25px;
+            }
+
+            .form-panel {
+                padding: 30px 22px;
+            }
+
+            .form-panel h2 {
+                font-size: 28px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .login-shell,
+            .login-action.ui-button {
+                animation: none;
+                transition: none;
+            }
+        }
+    </style>
 </h:head>
 
-<h:body style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f7f6;">
+<h:body>
 
-    <p:card style="width: 25rem; padding: 1rem;">
-        <f:facet name="title">
-            Sistema de Localização Acadêmica (SLA)
-        </f:facet>
+    <main class="page">
+        <section class="login-shell">
 
-        <h:form>
-    <p:messages id="msgs" showDetail="true" closable="true"/>
+            <aside class="hero">
 
-    <h:panelGrid columns="2" cellpadding="5" style="width: 100%;">
-        <p:outputLabel for="email" value="E-mail:" />
-        <p:inputText id="email" value="#{loginBean.email}" required="true" style="width: 100%;" />
+                <header class="brand">
+                    <div class="brand-symbol">
+                        <i class="pi pi-graduation-cap"></i>
+                    </div>
 
-        <p:outputLabel for="senha" value="Senha:" />
-        <p:password id="senha" value="#{loginBean.senha}" required="true" style="width: 100%;" />
-    </h:panelGrid>
+                    <div>
+                        <div class="brand-name">UNICEPLAC SLA</div>
+                        <div class="brand-caption">
+                            Sistema de Localização Acadêmica
+                        </div>
+                    </div>
+                </header>
 
-    <p:commandButton value="Entrar"
-                     action="#{loginBean.fazerLogin}"
-                     update="msgs"
-                     style="width: 100%; margin-top: 10px;" />
-</h:form>
-    </p:card>
+                <div class="hero-content">
+
+                    <div class="hero-tag">
+                        <i class="pi pi-sparkles"></i>
+                        Portal Acadêmico Digital
+                    </div>
+
+                    <h1>
+                        Sua jornada acadêmica,
+                        <span>em um só lugar.</span>
+                    </h1>
+
+                    <p class="hero-description">
+                        Uma experiência mais simples e inteligente
+                        para consultar disciplinas, encontrar salas,
+                        acompanhar horários e organizar sua rotina
+                        no campus.
+                    </p>
+
+                    <div class="features">
+                        <div class="feature">
+                            <i class="pi pi-calendar"></i>
+                            Horários
+                        </div>
+
+                        <div class="feature">
+                            <i class="pi pi-map-marker"></i>
+                            Localização
+                        </div>
+
+                        <div class="feature">
+                            <i class="pi pi-book"></i>
+                            Disciplinas
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="hero-footer">
+                    UNICEPLAC | Tecnologia e Educação
+                </footer>
+
+            </aside>
+
+            <div class="form-panel">
+
+                <div class="form-top">
+                    <span class="form-badge">
+                        <i class="pi pi-lock"></i>
+                        Acesso acadêmico
+                    </span>
+
+                    <i class="pi pi-shield"
+                       style="color: #91a7c0; font-size: 21px;"></i>
+                </div>
+
+                <h2>Bem-vindo de volta!</h2>
+
+                <p class="subtitle">
+                    Entre com suas credenciais para acessar
+                    o Sistema de Localização Acadêmica.
+                </p>
+
+                <h:form id="loginForm">
+
+                    <p:messages id="msgs"
+                                showDetail="true"
+                                closable="true"/>
+
+                    <div class="field">
+
+                        <p:outputLabel for="email"
+                                       styleClass="field-label">
+                            <i class="pi pi-envelope"></i>
+                            E-mail institucional
+                        </p:outputLabel>
+
+                        <p:inputText id="email"
+                                     value="#{loginBean.email}"
+                                     required="true"
+                                     requiredMessage="Informe seu e-mail institucional."
+                                     placeholder="usuario@uniceplac.edu.br"
+                                     styleClass="input-modern"/>
+
+                    </div>
+
+                    <div class="field">
+
+                        <p:outputLabel for="senha"
+                                       styleClass="field-label">
+                            <i class="pi pi-key"></i>
+                            Senha
+                        </p:outputLabel>
+
+                        <p:password id="senha"
+                                    value="#{loginBean.senha}"
+                                    required="true"
+                                    requiredMessage="Informe sua senha."
+                                    placeholder="Digite sua senha"
+                                    toggleMask="true"
+                                    feedback="false"
+                                    styleClass="password-wrapper"/>
+
+                    </div>
+
+                    <p:commandButton value="Entrar no portal"
+                                     action="#{loginBean.fazerLogin}"
+                                     update="msgs"
+                                     icon="pi pi-arrow-right"
+                                     iconPos="right"
+                                     styleClass="login-action"/>
+
+                </h:form>
+
+                <div class="login-note">
+                    <i class="pi pi-info-circle"></i>
+                    Acesso destinado aos usuários cadastrados.
+                </div>
+
+                <div class="bottom-line">
+                    SLA - Sistema de Localização Acadêmica
+                </div>
+
+            </div>
+
+        </section>
+    </main>
 
 </h:body>
 </html>

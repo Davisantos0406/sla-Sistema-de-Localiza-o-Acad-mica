@@ -1,43 +1,60 @@
-CREATE TABLE IF NOT EXISTS usuario (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100),
-    email VARCHAR(100),
-    senha VARCHAR(100),
-    perfil_id BIGINT
+
+CREATE TABLE IF NOT EXISTS perfis (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS sala (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    bloco VARCHAR(10),
-    numero VARCHAR(10),
-    tipo VARCHAR(50)
+CREATE TABLE IF NOT EXISTS usuarios (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    matricula VARCHAR(20) NOT NULL UNIQUE,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(100) NOT NULL,
+    perfil_id BIGINT NOT NULL,
+    FOREIGN KEY (perfil_id) REFERENCES perfis(id)
 );
 
-CREATE TABLE IF NOT EXISTS disciplina (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100)
+CREATE TABLE IF NOT EXISTS salas (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    bloco VARCHAR(10) NOT NULL,
+    numero VARCHAR(20) NOT NULL,
+    tipo VARCHAR(30) NOT NULL,
+    capacidade INT NOT NULL,
+    descricao VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS alocacao (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    usuario_id BIGINT,
-    disciplina_id BIGINT,
-    sala_id BIGINT,
-    horario VARCHAR(50),
-    FOREIGN KEY (usuario_id) REFERENCES usuario(id),
-    FOREIGN KEY (disciplina_id) REFERENCES disciplina(id),
-    FOREIGN KEY (sala_id) REFERENCES sala(id)
+CREATE TABLE IF NOT EXISTS disciplinas (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    codigo VARCHAR(20) NOT NULL UNIQUE,
+    nome VARCHAR(100) NOT NULL,
+    carga_horaria INT NOT NULL
 );
 
--- Inserindo dados de teste (Aluno e Professor)
-INSERT INTO usuario (id, nome, email, senha, perfil_id) VALUES (1, 'João Aluno', 'aluno@uniceplac.com', '123', 1);
-INSERT INTO usuario (id, nome, email, senha, perfil_id) VALUES (2, 'Prof Carlos', 'professor@uniceplac.com', '123', 2);
+CREATE TABLE IF NOT EXISTS alocacoes (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    disciplina_id BIGINT NOT NULL,
+    professor_id BIGINT NOT NULL,
+    sala_id BIGINT NOT NULL,
+    dia_semana VARCHAR(20) NOT NULL,
+    horario_inicio VARCHAR(10) NOT NULL,
+    horario_fim VARCHAR(10) NOT NULL,
+    FOREIGN KEY (disciplina_id) REFERENCES disciplinas(id),
+    FOREIGN KEY (professor_id) REFERENCES usuarios(id),
+    FOREIGN KEY (sala_id) REFERENCES salas(id)
+);
 
-INSERT INTO sala (id, bloco, numero, tipo) VALUES (1, 'Bloco A', '101', 'TEORICA');
-INSERT INTO sala (id, bloco, numero, tipo) VALUES (2, 'Bloco B', '202', 'LABORATORIO');
+CREATE TABLE IF NOT EXISTS clubes (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    categoria VARCHAR(50) NOT NULL,
+    descricao TEXT,
+    lider VARCHAR(100) NOT NULL
+);
 
-INSERT INTO disciplina (id, nome) VALUES (1, 'Engenharia de Software');
-INSERT INTO disciplina (id, nome) VALUES (2, 'Banco de Dados');
-
-INSERT INTO alocacao (usuario_id, disciplina_id, sala_id, horario) VALUES (1, 1, 1, 'Segunda 19:00');
-INSERT INTO alocacao (usuario_id, disciplina_id, sala_id, horario) VALUES (2, 2, 2, 'Terça 20:30');
+CREATE TABLE IF NOT EXISTS eventos_calendario (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(100) NOT NULL,
+    data_evento DATE NOT NULL,
+    tipo VARCHAR(50) NOT NULL,
+    descricao VARCHAR(255)
+);

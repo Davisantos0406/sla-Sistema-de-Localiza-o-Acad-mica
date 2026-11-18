@@ -1,24 +1,22 @@
 package com.uniceplac.sla.model;
 
 public class Usuario {
+
     private Long id;
+    private String matricula;
     private String nome;
     private String email;
     private String senha;
     private Long perfilId;
+    private String perfilNome;
 
     public Usuario() {}
 
-    public Usuario(Long id, String nome, String email, String senha, Long perfilId) {
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
-        this.senha = senha;
-        this.perfilId = perfilId;
-    }
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public String getMatricula() { return matricula; }
+    public void setMatricula(String matricula) { this.matricula = matricula; }
 
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
@@ -31,4 +29,7 @@ public class Usuario {
 
     public Long getPerfilId() { return perfilId; }
     public void setPerfilId(Long perfilId) { this.perfilId = perfilId; }
+
+    public String getPerfilNome() { return perfilNome; }
+    public void setPerfilNome(String perfilNome) { this.perfilNome = perfilNome; }
 }

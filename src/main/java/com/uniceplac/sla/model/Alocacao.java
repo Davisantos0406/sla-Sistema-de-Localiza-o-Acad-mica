@@ -1,34 +1,35 @@
- package com.uniceplac.sla.model;
+package com.uniceplac.sla.model;
 
 public class Alocacao {
+
     private Long id;
-    private Long usuarioId;
     private Long disciplinaId;
+    private Long professorId;
     private Long salaId;
-    private String horario;
+    private String diaSemana;
+    private String horarioInicio;
+    private String horarioFim;
 
     public Alocacao() {}
-
-    public Alocacao(Long id, Long usuarioId, Long disciplinaId, Long salaId, String horario) {
-        this.id = id;
-        this.usuarioId = usuarioId;
-        this.disciplinaId = disciplinaId;
-        this.salaId = salaId;
-        this.horario = horario;
-    }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Long getUsuarioId() { return usuarioId; }
-    public void setUsuarioId(Long usuarioId) { this.usuarioId = usuarioId; }
-
     public Long getDisciplinaId() { return disciplinaId; }
     public void setDisciplinaId(Long disciplinaId) { this.disciplinaId = disciplinaId; }
+
+    public Long getProfessorId() { return professorId; }
+    public void setProfessorId(Long professorId) { this.professorId = professorId; }
 
     public Long getSalaId() { return salaId; }
     public void setSalaId(Long salaId) { this.salaId = salaId; }
 
-    public String getHorario() { return horario; }
-    public void setHorario(String horario) { this.horario = horario; }
+    public String getDiaSemana() { return diaSemana; }
+    public void setDiaSemana(String diaSemana) { this.diaSemana = diaSemana; }
+
+    public String getHorarioInicio() { return horarioInicio; }
+    public void setHorarioInicio(String horarioInicio) { this.horarioInicio = horarioInicio; }
+
+    public String getHorarioFim() { return horarioFim; }
+    public void setHorarioFim(String horarioFim) { this.horarioFim = horarioFim; }
 }
